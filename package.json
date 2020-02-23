@@ -1,11 +1,11 @@
 {
-  "name": "tiny-swiper",
-  "version": "1.3.0",
-  "description": "2kb modular JS library alternative to SwiperJS with same modern API for carousel/slider/slideshow.",
+  "name": "@eyewa/tiny-swiper",
+  "version": "1.0.1",
+  "description": "Forked https://github.com/joe223/tiny-swiper",
   "main": "lib/index.min.js",
   "module": "lib/index.esm.js",
-  "repository": "https://github.com/joe223/tiny-swiper.git",
-  "author": "joe223",
+  "repository": "https://github.com/Eyewa/tiny-swiper.git",
+  "author": "Eyewa",
   "license": "MIT",
   "private": false,
   "scripts": {
