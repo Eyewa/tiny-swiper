@@ -1,6 +1,6 @@
 {
   "name": "@eyewa/tiny-swiper",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Forked https://github.com/joe223/tiny-swiper",
   "main": "lib/index.min.js",
   "module": "lib/index.esm.js",
