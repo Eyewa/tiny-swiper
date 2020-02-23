@@ -71,6 +71,7 @@ export default class Swiper {
             resistance: true,
             resistanceRatio: 0.85,
             speed: 300,
+            rtl: false,
             longSwipesMs: 300,
             intermittent: 0,
             spaceBetween: 0,
@@ -329,7 +330,6 @@ export default class Swiper {
             maxTransform
         } = this
         const offset = index * this.boxSize + this.baseTransform
-
         index = index < minIndex ? minIndex : index > maxIndex ? maxIndex : index
 
         this.emit('before-slide', this.index, this, index)
@@ -411,22 +411,27 @@ export default class Swiper {
         } = this
         const wrapperStyle = $wrapper.style
         const isHorizontal = config.direction === 'horizontal'
-
+        const isRtl = config.rtl === true
         $el.style.overflow = 'hidden'
-
         this.isHorizontal = isHorizontal
         this.$list = [].slice.call($el.getElementsByClassName(config.slideClass))
         this.minIndex = 0
         this.maxIndex = this.$list.length - (config.centeredSlides ? 1 : Math.ceil(config.slidesPerView))
+        const scrolIndex = isRtl ? -1 * this.maxIndex : -1 * index
         this.viewSize = isHorizontal ? $el.offsetWidth : $el.offsetHeight
         this.slideSize = (this.viewSize - (Math.ceil(config.slidesPerView - 1)) * config.spaceBetween) / config.slidesPerView
         this.boxSize = this.slideSize + config.spaceBetween
         this.baseTransform = config.centeredSlides ? (this.slideSize - this.viewSize) / 2 : 0
         this.minTransform = -this.baseTransform
         this.maxTransform = this.boxSize * this.$list.length - config.spaceBetween - this.viewSize - this.baseTransform
+        if (isRtl && isHorizontal) {
+            wrapperStyle.visibility = 'hidden'
+            wrapperStyle.opaciy = '0'
+            wrapperStyle.transform = `translateX(${-1 * this.maxTransform}px)`
+        }
         this.$list.forEach(item => {
             item.style[isHorizontal ? 'width' : 'height'] = `${this.slideSize}px`
-            item.style[isHorizontal ? 'margin-right' : 'margin-bottom'] = `${config.spaceBetween}px`
+            item.style[isHorizontal ? isRtl ? 'margin-left' : 'margin-right' : 'margin-bottom'] = `${config.spaceBetween}px`
         })
 
         wrapperStyle.willChange = 'transform'
@@ -434,7 +439,11 @@ export default class Swiper {
         wrapperStyle[isHorizontal ? 'width' : 'height'] = `${this.boxSize * this.$list.length}px`
         wrapperStyle.display = 'flex'
         wrapperStyle.flexDirection = isHorizontal ? 'row' : 'column'
-        this.transform(-index * this.boxSize)
+        wrapperStyle.direction = isRtl ? 'rtl' : 'ltr'
+        this.config.initialSlide = isRtl ? this.maxIndex - config.initialSlide : config.initialSlide
+        this.transform(scrolIndex * this.boxSize)
+        wrapperStyle.visibility = 'visible'
+        wrapperStyle.opaciy = '1'
     }
 
     destroy () {
